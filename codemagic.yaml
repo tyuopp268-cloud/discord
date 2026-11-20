@@ -19,10 +19,9 @@ workflows:
         script: |
           npm run build
 
-      - name: Copy web files
+      - name: Create Android project
         script: |
-          mkdir -p www
-          cp -r dist/* www/
+          npx cap add android
 
       - name: Sync Android
         script: |
