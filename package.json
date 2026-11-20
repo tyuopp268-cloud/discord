@@ -1,17 +1,23 @@
+
 {
-  "name": "discord-token-app",
+  "name": "discord-app",
   "version": "1.0.0",
-  "description": "Discord Token Grabber Desktop App",
-  "main": "main.js",
+  "private": true,
+  "description": "Discord Android Application",
   "scripts": {
-    "start": "electron .",
-    "build": "electron-builder"
-  },
-  "devDependencies": {
-    "electron": "^25.0.0",
-    "electron-builder": "^24.4.0"
+    "start": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "cap:init": "cap init",
+    "cap:add": "cap add android",
+    "cap:sync": "cap sync android",
+    "android:debug": "cd android && ./gradlew assembleDebug"
   },
   "dependencies": {
-    "axios": "^1.4.0"
+    "@capacitor/core": "^7.4.3"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.3",
+    "@capacitor/android": "^7.4.3",
+    "vite": "^6.3.5"
   }
 }
