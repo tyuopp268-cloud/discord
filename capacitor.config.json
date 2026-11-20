@@ -2,7 +2,7 @@
 {
   "appId": "com.discord.app",
   "appName": "Discord App",
-  "webDir": "www",
+  "webDir": "dist",
   "server": {
     "androidScheme": "https"
   }
