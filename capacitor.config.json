@@ -1,0 +1,9 @@
+
+{
+  "appId": "com.discord.app",
+  "appName": "Discord App",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
