@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Discord Token Tool</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #313338;
+            color: #dbdee1;
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h2 {
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            color: #949ba4;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: #1e1f22;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            color: #dbdee1;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.2s;
+        }
+        input:focus {
+            border-color: #5865f2;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #5865f2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #4752c4;
+        }
+        .result-container {
+            width: 100%;
+            margin-top: 20px;
+            display: none;
+        }
+        textarea {
+            width: 100%;
+            height: 80px;
+            background-color: #1e1f22;
+            border: 1px solid #232428;
+            border-radius: 4px;
+            color: #23a55a;
+            padding: 8px;
+            font-family: monospace;
+            resize: none;
+            outline: none;
+        }
+        .copy-btn {
+            background-color: #248046;
+            margin-top: 5px;
+        }
+        .copy-btn:hover {
+            background-color: #1a6335;
+        }
+        .error {
+            color: #f23f43;
+            font-size: 13px;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Discord Token Grabber</h2>
+    
+    <div class="form-group">
+        <label>อีเมล หรือ เบอร์โทรศัพท์</label>
+        <input type="text" id="email" placeholder="example@email.com">
+    </div>
+
+    <div class="form-group">
+        <label>รหัสผ่าน</label>
+        <input type="password" id="password" placeholder="••••••••••••">
+    </div>
+
+    <button id="submitBtn" onclick="getToken()">ดึงโทเค็น</button>
+
+    <div id="errorMsg" class="error"></div>
+
+    <div class="result-container" id="resultContainer">
+        <label>TOKEN ที่ได้:</label>
+        <textarea id="tokenResult" readonly></textarea>
+        <button class="copy-btn" onclick="copyToken()">คัดลอกโทเค็น</button>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        async function getToken() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+            const resultContainer = document.getElementById('resultContainer');
+            
+            errorMsg.innerText = "";
+            resultContainer.style.display = "none";
+
+            if (!email || !password) {
+                errorMsg.innerText = "กรุณากรอกข้อมูลให้ครบถ้วน";
+                return;
+            }
+
+            document.getElementById('submitBtn').innerText = "กำลังประมวลผล...";
+
+            const res = await ipcRenderer.invoke('get-token', { email, password });
+
+            document.getElementById('submitBtn').innerText = "ดึงโทเค็น";
+
+            if (res.success) {
+                document.getElementById('tokenResult').value = res.token;
+                resultContainer.style.display = "block";
+            } else {
+                errorMsg.innerText = "เกิดข้อผิดพลาด: " + res.message;
+            }
+        }
+
+        function copyToken() {
+            const tokenText = document.getElementById('tokenResult');
+            tokenText.select();
+            document.execCommand('copy');
+            alert('คัดลอกโทเค็นเรียบร้อยแล้ว!');
+        }
+    </script>
+</body>
+</html>
