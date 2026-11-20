@@ -1,0 +1,39 @@
+
+workflows:
+  android-apk:
+    name: Discord App Android APK
+    max_build_duration: 60
+
+    instance_type: linux_x2
+
+    environment:
+      node: 22
+      java: 17
+
+    scripts:
+      - name: Install dependencies
+        script: |
+          npm ci
+
+      - name: Build web application
+        script: |
+          npm run build
+
+      - name: Copy web files
+        script: |
+          mkdir -p www
+          cp -r dist/* www/
+
+      - name: Sync Android
+        script: |
+          npx cap sync android
+
+      - name: Build APK
+        script: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+    artifacts:
+      - android/app/build/outputs/apk/debug/*.apk
+      
