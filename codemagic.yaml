@@ -1,9 +1,7 @@
-
 workflows:
   android-apk:
     name: Discord App Android APK
     max_build_duration: 60
-
     instance_type: mac_mini_m2
 
     environment:
@@ -18,6 +16,10 @@ workflows:
       - name: Build web application
         script: |
           npm run build
+
+      - name: Check web assets
+        script: |
+          test -f dist/index.html
 
       - name: Create Android project
         script: |
